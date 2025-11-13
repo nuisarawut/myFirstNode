@@ -3,8 +3,13 @@ const fs = require('fs');
 const path = require('path');
 
 const server = http.createServer((req, res) => {
-  if (req.url === '/vr') {
-    const vrPath = path.join(__dirname, 'vr.html');
+  const vrMatch = req.url.match(/^\/vr(\d+)?$/);
+  
+  if (vrMatch) {
+    const vrNum = vrMatch[1] ? vrMatch[1] : '';
+    const filename = vrNum ? `vr${vrNum}.html` : 'vr.html';
+    const vrPath = path.join(__dirname, filename);
+    
     fs.readFile(vrPath, (err, data) => {
       if (err) {
         res.writeHead(404, { 'Content-Type': 'text/html' });
@@ -29,13 +34,22 @@ const server = http.createServer((req, res) => {
           p { color: #666; font-size: 18px; }
           a { color: #0066cc; text-decoration: none; font-size: 16px; margin: 10px; display: inline-block; }
           a:hover { text-decoration: underline; }
+          .vr-links { margin: 30px 0; }
         </style>
       </head>
       <body>
         <h1>Welcome to Your JavaScript Project!</h1>
         <p>Hello, World!</p>
         <p>Server is running on http://localhost:3000</p>
-        <p><a href="http://localhost:3000/vr">→ Visit VR Page</a></p>
+        <div class="vr-links">
+          <h2>VR Pages:</h2>
+          <a href="http://localhost:3000/vr">VR</a>
+          <a href="http://localhost:3000/vr1">VR 1</a>
+          <a href="http://localhost:3000/vr2">VR 2</a>
+          <a href="http://localhost:3000/vr3">VR 3</a>
+          <a href="http://localhost:3000/vr4">VR 4</a>
+          <a href="http://localhost:3000/vr5">VR 5</a>
+        </div>
       </body>
       </html>
     `);

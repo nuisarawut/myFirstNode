@@ -1,0 +1,18 @@
+<html>
+  <head>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://unpkg.com/networked-aframe/dist/networked-aframe.min.js"></script>
+  </head>
+  <body>
+    <a-scene networked-scene="
+              room: myroom;
+              debug: true;
+              adapter: wseasyrtc;">
+      <a-box position="0 1 -3" color="red" networked="template:#avatar-template;"></a-box>
+      
+      <a-entity id="avatar-template" networked="template: #avatar-template; attachTemplateToLocal: true">
+        <a-box color="blue" position="0 0 0"></a-box>
+      </a-entity>
+    </a-scene>
+  </body>
+</html>
