@@ -1,0 +1,25 @@
+#!/usr/bin/env sh
+# pre-push hook (versioned in repo)
+# This hook runs the PowerShell auto-commit script (if present) before a push.
+# It is intentionally non-fatal: if the auto-commit fails, the push will continue.
+
+# Resolve project root
+REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null)"
+if [ -z "$REPO_ROOT" ]; then
+  exit 0
+fi
+
+AUTO_COMMIT="$REPO_ROOT/auto-commit.ps1"
+
+if [ -f "$AUTO_COMMIT" ]; then
+  if command -v powershell.exe >/dev/null 2>&1; then
+    powershell -NoProfile -ExecutionPolicy Bypass -File "$AUTO_COMMIT" -Message "wwanmt auto commit message" || true
+  elif command -v pwsh >/dev/null 2>&1; then
+    pwsh -NoProfile -ExecutionPolicy Bypass -File "$AUTO_COMMIT" -Message "wwanmt auto commit message" || true
+  else
+    # No PowerShell available; skip
+    echo "[pre-push] PowerShell not found; skipping auto-commit"
+  fi
+fi
+
+exit 0
